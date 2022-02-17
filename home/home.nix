@@ -3,8 +3,10 @@ let
   defaultPkgs = with pkgs; [
     fd
     xsel
-    awk
-    tee
+    gawk
+    coreutils
+    ripgrep
+    rnix-lsp
     slack
     spotify
   ];

@@ -22,9 +22,10 @@ let
       vim-css-color
       vim-which-key
       vim-gtfo
-      vim-ripgrp
+      vim-ripgrep
       fzf-hoogle
     ];
+  cocSettings = builtins.toJSON (import ./coc-settings.nix);
 in
 {
   programs.neovim = {
@@ -47,5 +48,9 @@ in
 
       nnoremap <C-p> :Files<Cr>
     '';
+  };
+
+  xdg.configFile = {
+    "nvim/coc-settings.json".text = cocSettings;
   };
 }
