@@ -18,13 +18,17 @@ let
     hoogle
     nix-tree
   ];
+
+  scripts = pkgs.callPackage ./scripts/default.nix { inherit config pkgs; };
 in
 {
   programs.home-manager.enable = true;
 
   imports = (import ./programs);
 
-  home.packages = defaultPkgs ++ haskellPkgs;
+  xdg.enable = true;
+
+  home.packages = defaultPkgs ++ haskellPkgs ++ scripts;
 
   programs = {
     fzf.enable = true;

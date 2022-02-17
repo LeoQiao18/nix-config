@@ -26,7 +26,7 @@
       set background=dark
       colorscheme gruvbox
 
-      nnoremap <C-p> :File<Cr>
+      nnoremap <C-p> :Files<Cr>
     '';
   };
 }
