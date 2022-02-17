@@ -3,8 +3,6 @@ let
   defaultPkgs = with pkgs; [
     fd
     xsel
-    nodejs
-    yarn
     slack
     spotify
   ];

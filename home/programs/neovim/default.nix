@@ -1,8 +1,13 @@
 { config, pkgs, ... }:
 
 {
-  programs.vim = {
+  programs.neovim = {
     enable = true;
+    viAlias = true;
+    vimAlias = true;
+    vimdiffAlias = true;
+    withNodeJs = true;
+    withPython3 = true;
     plugins = with pkgs.vimPlugins; [
       vim-airline
       vim-unimpaired
