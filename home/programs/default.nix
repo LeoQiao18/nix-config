@@ -1,5 +1,5 @@
 [
   ./alacritty
   ./git
-  ./vim
+  ./neovim
 ]

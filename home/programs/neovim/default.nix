@@ -20,16 +20,15 @@
       fzf-vim
       coc-nvim
     ];
-    settings = {
-      expandtab = true;
-      shiftwidth = 2;
-      ignorecase = true;
-      number = true;
-    };
     extraConfig = ''
       syntax enable
       set background=dark
       colorscheme gruvbox
+
+      set expandtab=true;
+      set shiftwidth=true;
+      set ignorecase=true;
+      set number=true;
 
       nnoremap <C-p> :Files<Cr>
     '';
