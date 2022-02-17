@@ -3,6 +3,8 @@ let
   defaultPkgs = with pkgs; [
     fd
     xsel
+    awk
+    tee
     slack
     spotify
   ];
