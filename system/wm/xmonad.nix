@@ -31,6 +31,8 @@
         enable = true;
         enableContribAndExtras = true;
       };
+
+      xkbOptions = "ctrl:swapcaps";
     };
   };
 
