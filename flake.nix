@@ -18,6 +18,7 @@
       modules = [
         nixos-hardware.nixosModules.dell-xps-13-9310
         ./system/machines/xps-13
+        ./system/configuration.nix
       ];
     };
 

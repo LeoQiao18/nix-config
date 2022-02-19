@@ -9,16 +9,30 @@ let
     rnix-lsp
     slack
     spotify
+    tree
+    vlc
+    dmenu
+    killall
+    pandoc
   ];
 
   haskellPkgs = with pkgs.haskellPackages; [
+    stack
     brittany
     cabal2nix
     cabal-install
     ghc
+    hlint
     haskell-language-server
     hoogle
     nix-tree
+  ];
+
+  ocamlPkgs = with pkgs; [
+    opam
+    ocamlformat
+    ocamlPackages.ocaml
+    ocamlPackages.ocaml-lsp
   ];
 
   scripts = pkgs.callPackage ./scripts/default.nix { inherit config pkgs; };
@@ -30,7 +44,7 @@ in
 
   xdg.enable = true;
 
-  home.packages = defaultPkgs ++ haskellPkgs ++ scripts;
+  home.packages = defaultPkgs ++ haskellPkgs ++ ocamlPkgs ++ scripts;
 
   programs = {
     fzf.enable = true;

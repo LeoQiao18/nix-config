@@ -2,4 +2,5 @@
   ./alacritty
   ./git
   ./neovim
+  ./xmonad
 ]
