@@ -23,7 +23,10 @@
   # services.printing.enable = true;
 
   # Enable touchpad support (enabled default in most desktopManager).
-  services.xserver.libinput.enable = true;
+  services.xserver.libinput = {
+    enable = true;
+    naturalScrolling = true;
+  };
 
 
   # Some programs need SUID wrappers, can be configured further or are
