@@ -24,7 +24,10 @@
       layout = "us";
 
       # Enable touchpad support
-      libinput.enable = true;
+      libinput = {
+        enable = true;
+        naturalScrolling = true;
+      };
 
       displayManager.defaultSession = "none+xmonad";
       windowManager.xmonad = {
