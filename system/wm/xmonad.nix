@@ -5,27 +5,21 @@
 
   services = {
     # Store credentials, e.b. WiFi passwords
-    gnome3.gnome-keyring.enable = true;
+    gnome.gnome-keyring.enable = true;
 
     # Get system's power information, e.g. CPU usage
     upower.enable = true;
-    systemd.services.upower.enable = true;
 
     # Allow concurrent communication between multiple processes
     dbus = {
       enable = true;
       socketActivated = true;
-      packages = [ pkgs.gnome3.dconf ];
+      packages = [ pkgs.dconf ];
     };
-
-    # Enable bluetooth
-    hardware.bluetooth.enable = true;
-    services.blueman.enable = true;
 
     # X11
     xserver = {
       enable = true;
-      startDbusSession = true;
 
       # Configure keymap
       layout = "us";
@@ -40,4 +34,10 @@
       };
     };
   };
+
+  systemd.services.upower.enable = true;
+
+  # Enable bluetooth
+  hardware.bluetooth.enable = true;
+  services.blueman.enable = true;
 }

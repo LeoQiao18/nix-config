@@ -50,8 +50,6 @@
   nixpkgs.config.allowUnfree = true;
 
   nix = {
-    autoOptimiseStore = true;
-
     # Automate garbage collection
     gc = {
       automatic = true;
@@ -66,7 +64,10 @@
     '';
 
     # Required by Cachix to be used as non-root user
-    trustedUsers = [ "root" "lqiao" ];
+    settings = {
+      auto-optimise-store = true;
+      trusted-users = [ "root" "lqiao" ];
+    };
   };
   
   # This value determines the NixOS release from which the default
