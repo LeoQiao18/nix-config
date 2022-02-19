@@ -36,7 +36,7 @@
         enableContribAndExtras = true;
       };
 
-      # use CapsLock as Ctrl
+      # Use CapsLock as Ctrl
       xkbOptions = "ctrl:nocaps";
     };
   };
