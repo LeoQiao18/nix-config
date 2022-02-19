@@ -13,7 +13,6 @@
     # Allow concurrent communication between multiple processes
     dbus = {
       enable = true;
-      socketActivated = true;
       packages = [ pkgs.dconf ];
     };
 
