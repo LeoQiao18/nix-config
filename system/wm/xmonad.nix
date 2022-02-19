@@ -30,12 +30,14 @@
       };
 
       displayManager.defaultSession = "none+xmonad";
+
       windowManager.xmonad = {
         enable = true;
         enableContribAndExtras = true;
       };
 
-      xkbOptions = "ctrl:swapcaps";
+      # use CapsLock as Ctrl
+      xkbOptions = "ctrl:nocaps";
     };
   };
 
