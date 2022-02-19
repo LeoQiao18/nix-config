@@ -4,9 +4,8 @@
   programs.alacritty = {
     enable = true;
     settings = {
-      background_opacity = 0.8;
       font = {
-        size = 16;
+        size = 8;
       };
       window = {
         decorations = "full";
