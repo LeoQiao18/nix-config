@@ -1,0 +1,4 @@
+[
+  ./picom
+  ./networkmanager
+]

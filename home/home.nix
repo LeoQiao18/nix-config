@@ -14,18 +14,25 @@ let
     dmenu
     killall
     pandoc
+    tldr
   ];
 
-  haskellPkgs = with pkgs.haskellPackages; [
-    stack
-    brittany
-    cabal2nix
-    cabal-install
-    ghc
-    hlint
-    haskell-language-server
-    hoogle
-    nix-tree
+  xmonadPkgs = with pkgs; [
+    haskellPackages.xmobar
+    networkmanager_dmenu
+    nitrogen
+  ];
+
+  haskellPkgs = with pkgs; [
+    haskellPackages.stack
+    haskellPackages.brittany
+    haskellPackages.cabal2nix
+    haskellPackages.cabal-install
+    haskellPackages.ghc
+    haskellPackages.hlint
+    haskellPackages.haskell-language-server
+    haskellPackages.hoogle
+    haskellPackages.nix-tree
   ];
 
   ocamlPkgs = with pkgs; [
@@ -40,11 +47,17 @@ in
 {
   programs.home-manager.enable = true;
 
-  imports = (import ./programs);
+  imports = (import ./programs) ++ (import ./services);
 
   xdg.enable = true;
 
-  home.packages = defaultPkgs ++ haskellPkgs ++ ocamlPkgs ++ scripts;
+  home = {
+    packages = defaultPkgs ++ xmonadPkgs ++ haskellPkgs ++ ocamlPkgs ++ scripts;
+
+    sessionVariables = {
+      EDITOR = "nvim";
+    };
+  };
 
   programs = {
     fzf.enable = true;
@@ -55,5 +68,6 @@ in
       nix-direnv.enable = true;
     };
     bat.enable = true;
+    ssh.enable = true;
   };
 }

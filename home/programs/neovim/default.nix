@@ -46,6 +46,7 @@ in
       set ignorecase
       set number
 
+      let mapleader="\<space>"
       nnoremap <C-p> :Files<Cr>
     '';
   };

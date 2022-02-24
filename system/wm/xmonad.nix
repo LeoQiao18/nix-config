@@ -35,6 +35,9 @@
         enable = true;
         enableContribAndExtras = true;
       };
+
+      autoRepeatDelay = 250;
+      autoRepeatInterval = 25;
     };
   };
 

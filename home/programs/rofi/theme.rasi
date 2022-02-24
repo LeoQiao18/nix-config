@@ -1,0 +1,5 @@
+@theme "Arc-Dark"
+
+* {
+    font: "JetBrainsMono Nerd Font 16";
+}

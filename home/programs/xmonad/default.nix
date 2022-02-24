@@ -11,7 +11,7 @@
         hp.dbus
         hp.xmonad-volume
       ];
-      config = ./config.hs;
+      config = ./Config.hs;
     };
   };
 }

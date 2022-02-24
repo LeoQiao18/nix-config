@@ -1,6 +1,9 @@
 [
   ./alacritty
   ./git
+  ./rofi
   ./neovim
+  ./networkmanager
+  ./xmobar
   ./xmonad
 ]

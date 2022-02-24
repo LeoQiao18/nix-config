@@ -12,6 +12,11 @@
   # Set your time zone.
   time.timeZone = "America/New_York";
 
+  # Fonts
+  fonts.fonts = with pkgs; [
+    nerdfonts
+  ];
+
   networking = {
     networkmanager.enable = true;
     # The global useDHCP flag is deprecated, therefore explicitly set to false here.
@@ -41,6 +46,7 @@
     wget
     curl
     firefox
+    git
   ];
 
   nixpkgs.config.allowUnfree = true;
