@@ -1,6 +1,7 @@
 { config, pkgs, ... }:
 let
   defaultPkgs = with pkgs; [
+    arandr
     fd
     xsel
     gawk
@@ -8,10 +9,10 @@ let
     ripgrep
     rnix-lsp
     slack
-    spotify
     tree
     vlc
     dmenu
+    betterlockscreen
     killall
     pandoc
     tldr
@@ -21,6 +22,12 @@ let
     haskellPackages.xmobar
     networkmanager_dmenu
     nitrogen
+    xorg.xrandr
+  ];
+
+  polybarPkgs = with pkgs; [
+    font-awesome-ttf
+    material-design-icons
   ];
 
   haskellPkgs = with pkgs; [
@@ -47,12 +54,12 @@ in
 {
   programs.home-manager.enable = true;
 
-  imports = (import ./programs) ++ (import ./services);
+  imports = (import ./programs);
 
   xdg.enable = true;
 
   home = {
-    packages = defaultPkgs ++ xmonadPkgs ++ haskellPkgs ++ ocamlPkgs ++ scripts;
+    packages = defaultPkgs ++ xmonadPkgs ++ polybarPkgs ++ haskellPkgs ++ ocamlPkgs ++ scripts;
 
     sessionVariables = {
       EDITOR = "nvim";

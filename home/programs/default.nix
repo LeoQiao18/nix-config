@@ -1,9 +1,9 @@
 [
-  ./alacritty
   ./git
-  ./rofi
   ./neovim
   ./networkmanager
-  ./xmobar
-  ./xmonad
+  ./picom
+  ./rofi
+  ./screenlocker
+  # ./xmobar
 ]

@@ -13,12 +13,16 @@ import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.EwmhDesktops
 import XMonad.Util.EZConfig
 import XMonad.Actions.Navigation2D
-import XMonad.Actions.Volume
 import Data.Monoid
 import System.Exit
 
 import qualified XMonad.StackSet as W
 import qualified Data.Map        as M
+
+import qualified Codec.Binary.UTF8.String as UTF8
+import qualified DBus as D
+import qualified DBus.Client as D
+import XMonad.Hooks.DynamicLog
 
 -- The preferred terminal program, which is used in a binding below and by
 -- certain contrib modules.
@@ -56,7 +60,7 @@ myModMask       = mod4Mask
 --
 -- > workspaces = ["web", "irc", "code" ] ++ map show [4..9]
 --
-myWorkspaces    = ["1","2","3","4","5","6","7","8","9"]
+myWorkspaces    = ["web", "irc", "code" ] ++ map show [4..9]
 
 -- Border colors for unfocused and focused windows, respectively.
 --
@@ -68,20 +72,33 @@ myFocusedBorderColor = "#1681f2"
 --
 myKeys :: [(String, X ())]
 myKeys =
+  -- Applications
   [ ("M-<Return>", spawn myTerminal)
   , ("M-p", spawn myAppLauncher)
   , ("M-S-c", kill)
+  
+  -- Window Navigation
   , ("M-h", windowGo L False)
   , ("M-j", windowGo D False)
   , ("M-k", windowGo U False)
   , ("M-l", windowGo R False)
+
+  -- Window Swapping
+  , ("M-S-h", windowSwap L False)
+  , ("M-S-j", windowSwap D False)
+  , ("M-S-k", windowSwap U False)
+  , ("M-S-l", windowSwap R False)
+  , ("M-S-<Return>", windows W.swapMaster)
+
+  -- Top bar
   , ("M-b", sendMessage ToggleStruts)
-  --, ("<XF86AudioMute>", spawn "amixer set Master toggle")
-  --, ("<XF86AudioLowerVolume>", spawn "amixer set Master 5%- unmute")
-  --, ("<XF86AudioRaiseVolume>", spawn "amixer set Master 5%+ unmute")
-  , ("<XF86AudioMute>", toggleMute >> return ())
-  , ("<XF86AudioLowerVolume>", lowerVolume 5 >> return ())
-  , ("<XF86AudioRaiseVolume>", raiseVolume 5 >> return ())
+
+  -- Media keys
+  , ("<XF86AudioMute>", spawn "amixer set Master toggle")
+  , ("<XF86AudioLowerVolume>", spawn "amixer set Master 5%- unmute")
+  , ("<XF86AudioRaiseVolume>", spawn "amixer set Master 5%+ unmute")
+  , ("<XF86MonBrightnessUp>",  spawn "light -A 5")
+  , ("<XF86MonBrightnessDown>", spawn "light -U 5")
   ]
 --myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
 
@@ -259,6 +276,7 @@ myEventHook = mempty
 -- Perform an arbitrary action on each internal state change or X event.
 -- See the 'XMonad.Hooks.DynamicLog' extension for examples.
 --
+myLogHook :: X ()
 myLogHook = return ()
 
 ------------------------------------------------------------------------
@@ -276,17 +294,11 @@ myStartupHook = return ()
 
 -- Run xmonad with the settings you specify. No need to modify this.
 --
-main = do
-  xmproc <- spawnPipe "xmobar -x 0 $HOME/.config/xmobar/xmobarrc"
-  xmonad $ docks . ewmh . (withNavigation2DConfig def) $ defaults
+main :: IO ()
+main = mkDbusClient >>= main'
 
--- A structure containing your configuration settings, overriding
--- fields in the default config. Any you don't override, will
--- use the defaults defined in xmonad/XMonad/Config.hs
---
--- No need to modify this.
---
-defaults = def {
+main' :: D.Client -> IO ()
+main' dbus = xmonad . docks . ewmh . (withNavigation2DConfig def) $ def {
       -- simple stuff
         terminal           = myTerminal,
         focusFollowsMouse  = myFocusFollowsMouse,
@@ -304,7 +316,7 @@ defaults = def {
         layoutHook         = myLayout,
         manageHook         = myManageHook,
         handleEventHook    = myEventHook,
-        logHook            = myLogHook,
+        logHook            = myPolybarLogHook dbus,
         startupHook        = myStartupHook
     } `additionalKeysP` myKeys
 
@@ -358,3 +370,44 @@ help = unlines ["The default modifier key is 'alt'. Default keybindings:",
     "mod-button1  Set the window to floating mode and move by dragging",
     "mod-button2  Raise the window to the top of the stack",
     "mod-button3  Set the window to floating mode and resize by dragging"]
+
+------------------------------------------------------------------------
+-- Polybar settings (needs DBus client).
+--
+mkDbusClient :: IO D.Client
+mkDbusClient = do
+  dbus <- D.connectSession
+  D.requestName dbus (D.busName_ "org.xmonad.log") opts
+  return dbus
+ where
+  opts = [D.nameAllowReplacement, D.nameReplaceExisting, D.nameDoNotQueue]
+
+-- Emit a DBus signal on log updates
+dbusOutput :: D.Client -> String -> IO ()
+dbusOutput dbus str =
+  let opath  = D.objectPath_ "/org/xmonad/Log"
+      iname  = D.interfaceName_ "org.xmonad.Log"
+      mname  = D.memberName_ "Update"
+      signal = D.signal opath iname mname
+      body   = [D.toVariant $ UTF8.decodeString str]
+  in  D.emit dbus $ signal { D.signalBody = body }
+
+polybarHook :: D.Client -> PP
+polybarHook dbus =
+  let wrapper c s | s /= "NSP" = wrap ("%{F" <> c <> "} ") " %{F-}" s
+                  | otherwise  = mempty
+      blue   = "#2E9AFE"
+      gray   = "#7F7F7F"
+      orange = "#ea4300"
+      purple = "#9058c7"
+      red    = "#722222"
+  in  def { ppOutput          = dbusOutput dbus
+          , ppCurrent         = wrapper blue
+          , ppVisible         = wrapper gray
+          , ppUrgent          = wrapper orange
+          , ppHidden          = wrapper gray
+          , ppHiddenNoWindows = wrapper red
+          , ppTitle           = wrapper purple . shorten 90
+          }
+
+myPolybarLogHook dbus = myLogHook <+> dynamicLogWithPP (polybarHook dbus)

@@ -1,5 +1,8 @@
 { config, lib, pkgs, inputs, ... }:
 
+let
+  myfonts = pkgs.callPackage fonts/default.nix { inherit pkgs; };
+in
 {
   imports = [ ./wm/xmonad.nix ];
 
@@ -15,6 +18,9 @@
   # Fonts
   fonts.fonts = with pkgs; [
     nerdfonts
+    font-awesome-ttf
+    myfonts.flags-world-color
+    myfonts.icomoon-feather
   ];
 
   networking = {
@@ -33,10 +39,13 @@
   sound.enable = true;
   hardware.pulseaudio.enable = true;
 
+  # Monitor brightness
+  programs.light.enable = true;
+
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.lqiao = {
     isNormalUser = true;
-    extraGroups = [ "wheel" "networkmanager" ]; # Enable ‘sudo’ for the user.
+    extraGroups = [ "wheel" "networkmanager" "video" ]; # Enable ‘sudo’ for the user.
   };
 
   # List packages installed in system profile. To search, run:
