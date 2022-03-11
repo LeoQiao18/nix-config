@@ -5,8 +5,8 @@ let
   #base = pkgs.callPackage ../home.nix { inherit config lib pkgs; };
 
   laptopBar = pkgs.callPackage ../programs_scaled/polybar/bar.nix {
-    font0 = 10;
-    font1 = 12;
+    font0 = 14;
+    font1 = 14;
     font2 = 24;
     font3 = 18;
     font4 = 5;

@@ -46,7 +46,7 @@ let
   keyboard = ''
     [module/clickable-keyboard]
     inherit = module/keyboard
-    label-layout =   %layout% %icon%
+    label-layout =   %layout%
   '';
 
   mpris = ''
@@ -76,6 +76,8 @@ in
     config = ./config.ini;
     extraConfig = bars + colors + mods1 + mods2 + customMods;
     script = ''
+      export ETH_INTERFACE=$(${networkScript}/bin/check-network eth)
+      export WIFI_INTERFACE=$(${networkScript}/bin/check-network wifi)
       killall -q polybar
       polybar top 2>&1 | tee -a /tmp/polybarTop.log & disown
       polybar bottom 2>&1 | tee -a /tmp/polybarBottom.log & disown

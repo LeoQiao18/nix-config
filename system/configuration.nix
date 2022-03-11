@@ -1,6 +1,13 @@
 { config, lib, pkgs, inputs, ... }:
 
 let
+  customFonts = pkgs.nerdfonts.override {
+    fonts = [
+      "JetBrainsMono"
+      "Iosevka"
+    ];
+  };
+
   myfonts = pkgs.callPackage fonts/default.nix { inherit pkgs; };
 in
 {
@@ -17,13 +24,14 @@ in
 
   # Fonts
   fonts.fonts = with pkgs; [
-    nerdfonts
+    customFonts
     font-awesome-ttf
     myfonts.flags-world-color
     myfonts.icomoon-feather
   ];
 
   networking = {
+    firewall.enable = false;
     networkmanager.enable = true;
     # The global useDHCP flag is deprecated, therefore explicitly set to false here.
     # Per-interface useDHCP will be mandatory in the future, so this generated config
@@ -36,10 +44,18 @@ in
   i18n.defaultLocale = "en_US.UTF-8";
 
   # Enable sound.
-  sound.enable = true;
-  hardware.pulseaudio.enable = true;
+  sound = {
+    enable = true;
+    mediaKeys.enable = true;
+  };
 
-  # Monitor brightness
+  hardware.pulseaudio = {
+    enable = true;
+    extraModules = [ pkgs.pulseaudio-modules-bt ];
+    package = pkgs.pulseaudioFull;
+  };
+
+  # Screen brightness
   programs.light.enable = true;
 
   # Define a user account. Don't forget to set a password with ‘passwd’.

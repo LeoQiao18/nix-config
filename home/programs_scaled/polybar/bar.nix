@@ -1,4 +1,4 @@
-{ font0 ? 10, font1 ? 12, font2 ? 24, font3 ? 18, font4 ? 5, font5 ? 10 }:
+{ font0 ? 16, font1 ? 18, font2 ? 40, font3 ? 28, font4 ? 7, font5 ? 16 }:
 
 let
   bar = ''
